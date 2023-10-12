@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import "./styling/sign_in.css";
 import "./styling/error_text.css";
+import "./styling/dashboard.css";
 
 function App() {
   return (

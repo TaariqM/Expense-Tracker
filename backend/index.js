@@ -63,6 +63,19 @@ app.post("/api/v1/forgot_password", (request, response) => {
   });
 });
 
+app.get("/api/v1/user/:id", (request, response) => {
+  const userId = request.params.id;
+  const q = "SELECT * FROM user WHERE `user_id` = ?";
+
+  db.query(q, [userId], (err, data) => {
+    if (err) {
+      return response.status(500).json(err);
+    } else {
+      return response.status(200).json(data);
+    }
+  });
+});
+
 app.listen(8800, () => {
   console.log("Connected to backend");
 });

@@ -1,11 +1,15 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const Dashboard = () => {
   let classname = {
     selected: "item-selected",
     notSelected: "item-notSelected",
   };
+
+  const [user, setUser] = useState({});
 
   const [navigation, setNavigation] = useState([
     {
@@ -35,6 +39,9 @@ const Dashboard = () => {
     },
   ]);
 
+  const location = useLocation();
+
+  const userId = location.pathname.split("/")[2]; // this will get the id of the user
   const handleClick = (clickedItem) => {
     // Update the state to mark the clicked item as current
     setNavigation((prevNavigation) =>
@@ -46,6 +53,24 @@ const Dashboard = () => {
 
     console.log(clickedItem);
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const userData = await axios.get(
+          "http://localhost:8800/api/v1/user/" + userId
+        );
+        setUser({ ...userData.data[0] }); // the axios responses are usually in a 'data' property
+        console.log(userData.data[0]);
+      } catch (err) {
+        console.log(err);
+      }
+      // console.log(user);
+    };
+
+    getData();
+    console.log(user);
+  }, []);
 
   return (
     <div className="main">
@@ -77,8 +102,12 @@ const Dashboard = () => {
         </div>
       </nav>
 
-      <div className="dashboard-title-container">
-        <h1 className="dashboard-title">Dashboard</h1>
+      <div className="dashboard-container">
+        <div className="dashboard-title-container">
+          <h1 className="dashboard-title">{`${user.first_name}${" "}${
+            user.last_name
+          }${"'s"}${" Dashboard"}`}</h1>
+        </div>
       </div>
 
       <div className="cards"></div>

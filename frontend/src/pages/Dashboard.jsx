@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import ExpenseFolderModal from "./ExpenseFolderModal";
 
 const Dashboard = () => {
   let classname = {
@@ -10,6 +11,7 @@ const Dashboard = () => {
   };
 
   const [user, setUser] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [navigation, setNavigation] = useState([
     {
@@ -51,7 +53,10 @@ const Dashboard = () => {
       }))
     );
 
-    console.log(clickedItem);
+    // console.log(clickedItem);
+    if (clickedItem.name === "Add Expense Folder") {
+      setIsModalOpen(!isModalOpen);
+    }
   };
 
   useEffect(() => {
@@ -61,7 +66,7 @@ const Dashboard = () => {
           "http://localhost:8800/api/v1/user/" + userId
         );
         setUser({ ...userData.data[0] }); // the axios responses are usually in a 'data' property
-        console.log(userData.data[0]);
+        // console.log(userData.data[0]);
       } catch (err) {
         console.log(err);
       }
@@ -69,8 +74,8 @@ const Dashboard = () => {
     };
 
     getData();
-    console.log(user);
-  }, []);
+    // console.log(user);
+  }, [userId]);
 
   return (
     <div className="main">
@@ -111,6 +116,8 @@ const Dashboard = () => {
       </div>
 
       <div className="cards"></div>
+
+      {isModalOpen && <ExpenseFolderModal />}
     </div>
   );
 };

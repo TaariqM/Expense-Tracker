@@ -76,6 +76,19 @@ app.get("/api/v1/user/:id", (request, response) => {
   });
 });
 
+app.post("/api/v1/addExpenseFolder", (request, response) => {
+  const q = "INSERT INTO expense_folder (`user_id`, `name`) VALUES (?)";
+  const values = [request.body.userId, request.body.folderName];
+
+  db.query(q, [values], (err, data) => {
+    if (err) {
+      return response.status(500).json(err);
+    } else {
+      return response.status(200).json(data);
+    }
+  });
+});
+
 app.listen(8800, () => {
   console.log("Connected to backend");
 });

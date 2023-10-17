@@ -9,3 +9,10 @@ Expense Tracker is a web application, and as the name suggests, it is a platform
 * Users can add and delete expenses from an expense folder
 * Users can modify/update an expense
 * Users can sign out of their accounts
+
+### Installation Guide
+
+#### Database Installation Guide
+* Download and install MySQL and MySQL Workbench. MySQL is used to creat database tables to store data, and MYSQL Workbench provides a User Interface to create database tables easier
+* Once installed, double click on your ```Local Instance```, and enter the password that was created during the installation ![image](https://i.postimg.cc/2ydqWGgd/Double-Click-Local-Instance.png)
+* Right click in the ```SCHEMAS``` section on the left side panel, and select ```Create Schema```. Name it ```expensedb```, and click apply

@@ -18,5 +18,14 @@ Expense Tracker is a web application, and as the name suggests, it is a platform
 * Right click in the ```SCHEMAS``` section on the left side panel, and select ```Create Schema```. Name it ```expensedb```, and click apply ![image](https://i.postimg.cc/FRH9xJDS/Create-Shema.png)
 * Once the Database is created, create 3 tables: ```user```, ```expense_folder```, and ```expense```
 * ```user``` table contains the following columns: ```user_id```, ```email```, ```password```, ```first_name```, and ```last_name```
-*```expense_folder``` table contains the following columns: ```expense_folder_id```, ```user_id```, and ```name```
-*```expense``` table contains the following columns: ```expense_id```, ```user_id```, ```expense_folder_id```, ```title```, ```amount```, ```category```, ```desc```, and ```date```
+* ```expense_folder``` table contains the following columns: ```expense_folder_id```, ```user_id```, and ```name```
+* ```expense``` table contains the following columns: ```expense_id```, ```user_id```, ```expense_folder_id```, ```title```, ```amount```, ```category```, ```desc```, and ```date```
+
+### Database Tables
+The Database tables created during the Database Installation Guide will look like this. These tables contain example data.
+
+#### User Table
+| user_id | email | password | first_name | last_name |
+| --- | --- | --- | --- | --- |
+| 1 | johndoe@gmail.com | randomPassword | John | Doe |
+| 2 | janedoe@gmail.com | randomPassword2 | Jane | Doe |

@@ -29,3 +29,34 @@ The Database tables created during the Database Installation Guide will look lik
 | --- | --- | --- | --- | --- |
 | 1 | johndoe@gmail.com | randomPassword | John | Doe |
 | 2 | janedoe@gmail.com | randomPassword2 | Jane | Doe |
+
+* ```user_id``` - this column is of INT datatype, and serves as the Primary Key for this table
+* ```email``` -  this column is of VARCHAR datatype, cannot be NULL, and must be Unique
+* ```password``` - this column is of VARCHAR datatype, and cannot be NULL
+* ```first_name``` - this column is of VARCHAR datatype, and cannot be NULL
+* ```last_name``` - this column is of VARCHAR datatype, and cannot be NULL
+
+#### Expense Folder Table
+| expense_folder_id | user_id | name |
+| --- | --- | --- |
+| 1 | 1 | Bills |
+| 2 | 1 | Savings |
+
+* ```expense_folder_id``` - this column is of INT datatype, serves as the Primary Key for this table, and cannot be NULL
+* ```user_id``` - this column is of INT datatype
+* ```name``` - this column is of VARCHAR datatype, and cannot be NULL
+
+#### Expense Table 
+| expense_id | user_id | expense_folder_id | title | amount | category | desc | date |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 1 | 1 | Hydro One | 50.00 | Utilities | Water Bill | 17/10/2023 |
+| 2 | 1| 1| Rent | 1200.00 | Rent Bill | Monthly Rent | 17/10/2023 |
+
+* ```expense_id``` - this column is of INT datatype, serves as the Primary Key for this table, and cannot be NULL
+* ```user_id``` - this column is of INT datatype, and cannot be NULL
+* ```expense_folder_id``` - this column is of INT datatype, and cannot be NULL
+* ```title``` - this column is of VARCHAR datatype, and cannot be NULL
+* ```amount``` - this column is of INT datatype, and cannot be NULL
+* ```category``` - this column is of VARCHAR datatype
+* ```desc``` - this column is of VARCHAR datatype
+* ```date``` - this column is of DATE datatype

@@ -60,3 +60,41 @@ The Database tables created during the Database Installation Guide will look lik
 * ```category``` - this column is of VARCHAR datatype
 * ```desc``` - this column is of VARCHAR datatype
 * ```date``` - this column is of DATE datatype
+
+### Web App Installation
+* Clone this repository
+* The 'backend' folder contains files related to the backend, and the 'frontend' folder contains files related to the frontend
+* Open a terminal, navigate to the backend folder, and run ```npm i express cors mysql nodemon```. This will install Express, cors, mysql, and nodemon packages
+* Once thats finished, run ```npm start``` to start the backend server
+* Open the ```index.js``` file under the backend folder, and within the ```mysql.createConnection({})```, change the password to the password that was created when installing MySQL
+* Open a new terminal, and navigate to the frontend folder
+* Run ```npm i react-router-dom```. This will install the React Router DOM package that will allow you to route and navigate to web pages
+* Run ```npm i axios```. This will install the axios package. Axios will allow you to make API requests using a React application
+
+## API Endpoints
+Below are the current API Endpoints. More endpoints will be added later on.
+
+| HTTP Request Method | Endpoints | Action |
+| --- | --- | --- |
+| POST | /api/v1/register | Creates and adds a new user account |
+| POST | /api/v1/login | Passes user login information, to login an existing user account |
+| POST | /api/v1/forgot_password | To let an existing user to reset their password for their account |
+| GET | /api/v1/user/:id | Gets existing user information based off of a user id |
+| POST | /api/v1/addExpenseFolder | Creates and adds an expense folder |
+
+## Technologies Used 
+
+### Frontend 
+* React
+* JavaScript
+* HTML 
+* CSS 
+
+### Backend 
+* Express 
+* NodeJS
+* JavaScript
+
+### Database
+* MySQL
+* MySQL Workbench

@@ -1,5 +1,21 @@
 # Expense Tracker
 
+## Table of Contents
+* [Introduction](#introduction)
+* [Features](#features)
+* [Installation Guide](#installation-guide)
+	* [Database Installation Guide](#database-installation-guide)
+	* [Database Tables](#database-tables)
+		* [User Table](#user-table)
+		* [Expense Folder Table](#expense-folder-table)
+		* [Expense Table](#expense-table)
+	* [Web App Installation](#web-app-installation)
+* [API Endpoints](#api-endpoints)
+* [Technologies Used](#technologies-used)
+	* [Frontend](#frontend)
+	* [Backend](#backend)
+	* [Database](#database)
+
 ## Introduction
 Expense Tracker is a web application, and as the name suggests, it is a platform that enables users to keep track of their expenses. This will help users know the amount of money they are spending, and what they are spending their money on.
 

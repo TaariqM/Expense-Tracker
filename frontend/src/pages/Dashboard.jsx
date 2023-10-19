@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import ExpenseFolderModal from "./ExpenseFolderModal";
+import "../styling/modal.css";
 
 const Dashboard = () => {
   let classname = {
@@ -26,12 +27,12 @@ const Dashboard = () => {
     },
     {
       name: "Profile",
-      href: "#",
+      href: "/profile",
       current: false,
     },
     {
       name: "Settings",
-      href: "#",
+      href: "/settings",
       current: false,
     },
     {
@@ -55,7 +56,7 @@ const Dashboard = () => {
 
     // console.log(clickedItem);
     if (clickedItem.name === "Add Expense Folder") {
-      setIsModalOpen(!isModalOpen);
+      setIsModalOpen(true);
     }
   };
 
@@ -78,7 +79,7 @@ const Dashboard = () => {
   }, [userId]);
 
   return (
-    <div className="main">
+    <div className={`main ${isModalOpen ? "modal-open" : ""}`}>
       <nav className="navigation-bar-container">
         <div className="navigation-bar">
           <div className="navigation-bar-items-container">
@@ -117,7 +118,16 @@ const Dashboard = () => {
 
       <div className="cards"></div>
 
-      {isModalOpen && <ExpenseFolderModal />}
+      {isModalOpen && (
+        <ExpenseFolderModal
+          isOpen={isModalOpen}
+          closeModal={() => setIsModalOpen(false)}
+        />
+      )}
+
+      {/* <ExpenseFolderModal isOpen={isModalOpen} closeModal={setIsModalOpen} /> */}
+
+      {/* {isModalOpen && <ExpenseFolderModal setModalOpen={setIsModalOpen} />} */}
     </div>
   );
 };

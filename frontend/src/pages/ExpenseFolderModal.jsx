@@ -2,8 +2,9 @@ import React from "react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../styling/modal.css";
 
-const ExpenseFolderModal = () => {
+const ExpenseFolderModal = ({ isOpen, closeModal }) => {
   const [expenseFolder, setExpenseFolder] = useState({
     folderName: "",
     userId: null,
@@ -19,6 +20,8 @@ const ExpenseFolderModal = () => {
         "http://localhost:8800/api/v1/addExpenseFolder",
         expenseFolder
       );
+      // props.setModalOpen(false);
+      closeModal(false);
     } catch (err) {
       console.log(err);
     }
@@ -35,24 +38,27 @@ const ExpenseFolderModal = () => {
   };
 
   return (
-    <div className="modal">
-      <div className="modal-title-container">
-        <h1 className="modal-title">Add Expense Folder</h1>
-      </div>
+    <div className={`modal ${isOpen ? "open" : ""}`}>
+      <div className="modal-overlay" onClick={closeModal}></div>
+      <div className="modal-content">
+        <div className="modal-title-container">
+          <h1 className="modal-title">Add Expense Folder</h1>
+        </div>
 
-      <div className="modal-form-container">
-        <form className="modal-form" onSubmit={handleSubmit}>
-          <label>Name:</label>
-          <div className="model-form-input-container">
-            <input type="text" name="folderName" onChange={handleChange} />
-          </div>
+        <div className="modal-form-container">
+          <form className="modal-form" onSubmit={handleSubmit}>
+            <label>Name:</label>
+            <div className="model-form-input-container">
+              <input type="text" name="folderName" onChange={handleChange} />
+            </div>
 
-          <div className="modal-button-container">
-            <button className="modal-button" type="submit">
-              Add
-            </button>
-          </div>
-        </form>
+            <div className="modal-button-container">
+              <button className="modal-button" type="submit">
+                Add
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

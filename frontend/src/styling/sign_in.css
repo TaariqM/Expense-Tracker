@@ -96,7 +96,8 @@ input {
   justify-content: center;
   border-radius: 6px;
   border-width: 0px;
-  background-color: rgb(79 70 229);
+  background-color: rgb(31 41 55);
+  /* background-color: rgb(79 70 229); */
   padding-left: 12px;
   padding-right: 12px;
   padding-top: 6px;
@@ -109,7 +110,8 @@ input {
 }
 
 button:hover {
-  background-color: rgb(99 102 241);
+  background-color: rgb(55 65 81);
+  /* background-color: rgb(99 102 241); */
 }
 
 .pwd-forgot-pwd-container {
@@ -125,11 +127,13 @@ button:hover {
 
 .forgot-pwd {
   font-weight: 600;
-  color: rgb(79 70 229);
+  /* color: rgb(79 70 229); */
+  color: rgb(31 41 55);
 }
 
 .forgot-pwd:hover {
-  color: rgb(99 102 241);
+  color: rgb(55 65 81);
+  /* color: rgb(99 102 241); */
 }
 
 .not-member {
@@ -143,11 +147,13 @@ button:hover {
 .sign-up-link {
   font-weight: 600;
   line-height: 24px;
-  color: rgb(79 70 229);
+  color: rgb(31 41 55);
+  /* color: rgb(79 70 229); */
 }
 
 .sign-up-link:hover {
-  color: rgb(99 102 241);
+  color: rgb(55 65 81);
+  /* color: rgb(99 102 241); */
 }
 
 @media screen and (min-width: 1024px) {

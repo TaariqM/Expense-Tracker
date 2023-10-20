@@ -37,27 +37,33 @@ const ExpenseFolderModal = ({ isOpen, closeModal }) => {
     console.log(expenseFolder);
   };
 
+  // this function will handle clicks inside the modal content
+  const handleContentClick = (e) => {
+    e.stopPropagation(); // Prevents the click event from propagating to the overlay
+  };
+
   return (
-    <div className={`modal ${isOpen ? "open" : ""}`}>
-      <div className="modal-overlay" onClick={closeModal}></div>
-      <div className="modal-content">
-        <div className="modal-title-container">
-          <h1 className="modal-title">Add Expense Folder</h1>
-        </div>
+    <div className={`modal ${isOpen ? "open" : ""}`} onClick={closeModal}>
+      <div className="modal-overlay">
+        <div className="modal-content" onClick={handleContentClick}>
+          <div className="modal-title-container">
+            <h1 className="modal-title">Add Expense Folder</h1>
+          </div>
 
-        <div className="modal-form-container">
-          <form className="modal-form" onSubmit={handleSubmit}>
-            <label>Name:</label>
-            <div className="model-form-input-container">
-              <input type="text" name="folderName" onChange={handleChange} />
-            </div>
+          <div className="modal-form-container">
+            <form className="modal-form" onSubmit={handleSubmit}>
+              <label>Name:</label>
+              <div className="model-form-input-container">
+                <input type="text" name="folderName" onChange={handleChange} />
+              </div>
 
-            <div className="modal-button-container">
-              <button className="modal-button" type="submit">
-                Add
-              </button>
-            </div>
-          </form>
+              <div className="modal-button-container">
+                <button className="modal-button" type="submit">
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

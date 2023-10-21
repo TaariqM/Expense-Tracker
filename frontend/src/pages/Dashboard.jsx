@@ -13,6 +13,7 @@ const Dashboard = () => {
 
   const [user, setUser] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [expenseFolders, setExpenseFolders] = useState([]);
 
   const [navigation, setNavigation] = useState([
     {
@@ -67,15 +68,19 @@ const Dashboard = () => {
           "http://localhost:8800/api/v1/user/" + userId
         );
         setUser({ ...userData.data[0] }); // the axios responses are usually in a 'data' property
-        // console.log(userData.data[0]);
+
+        const expenseFolderData = await axios.get(
+          "http://localhost:8800/api/v1/expenseFolder/" + userId
+        );
+
+        setExpenseFolders(expenseFolderData.data);
+        console.log(expenseFolderData);
       } catch (err) {
         console.log(err);
       }
-      // console.log(user);
     };
 
     getData();
-    // console.log(user);
   }, [userId]);
 
   return (
@@ -116,7 +121,20 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="cards"></div>
+      <div className="cards-container">
+        {expenseFolders.map((expenseFolder) => (
+          <div className="card">
+            <div className="card-title-container">
+              <h2 className="card-title">{expenseFolder.name}</h2>
+            </div>
+
+            <div className="buttons-container">
+              <button className="cardBtn">Edit</button>
+              <button className="cardBtn">Delete</button>
+            </div>
+          </div>
+        ))}
+      </div>
 
       {isModalOpen && (
         <ExpenseFolderModal
@@ -124,10 +142,6 @@ const Dashboard = () => {
           closeModal={() => setIsModalOpen(false)}
         />
       )}
-
-      {/* <ExpenseFolderModal isOpen={isModalOpen} closeModal={setIsModalOpen} /> */}
-
-      {/* {isModalOpen && <ExpenseFolderModal setModalOpen={setIsModalOpen} />} */}
     </div>
   );
 };

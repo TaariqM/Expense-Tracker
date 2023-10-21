@@ -89,6 +89,19 @@ app.post("/api/v1/addExpenseFolder", (request, response) => {
   });
 });
 
+app.get("/api/v1/expenseFolder/:id", (request, response) => {
+  const userId = request.params.id;
+  const q = "SELECT * FROM expense_folder WHERE `user_id` = ?";
+
+  db.query(q, [userId], (err, data) => {
+    if (err) {
+      return response.status(500).json(err);
+    } else {
+      return response.status(200).json(data);
+    }
+  });
+});
+
 app.listen(8800, () => {
   console.log("Connected to backend");
 });

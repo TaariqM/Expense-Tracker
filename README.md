@@ -97,6 +97,7 @@ Below are the current API Endpoints. More endpoints will be added later on.
 | POST | /api/v1/forgot_password | To let an existing user to reset their password for their account |
 | GET | /api/v1/user/:id | Gets existing user information based off of a user id |
 | POST | /api/v1/addExpenseFolder | Creates and adds an expense folder |
+| GET | /api/v1/expenseFolder/:id | Gets all of the expense folders based off of a user id |
 
 ## Technologies Used 
 

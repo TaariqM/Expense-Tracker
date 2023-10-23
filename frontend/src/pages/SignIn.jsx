@@ -31,7 +31,11 @@ const SignIn = () => {
         .then((response) => {
           console.log(response);
           if (response.data.length) {
-            navigate(`/dashboard/${response.data[0].user_id}`);
+            navigate(
+              `/dashboard/${
+                response.data[0].user_id
+              }/${response.data[0].first_name.toLowerCase()}${"-"}${response.data[0].last_name.toLowerCase()}`
+            );
           } else {
             if (errorMessages.isEmptyEmail || errorMessages.improperEmail) {
               setErrors({ ...errorMessages, noMatch: "" });

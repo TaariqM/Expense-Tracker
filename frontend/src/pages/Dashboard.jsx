@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ExpenseFolderModal from "./ExpenseFolderModal";
 import "../styling/modal.css";
 
@@ -11,42 +11,17 @@ const Dashboard = () => {
     notSelected: "item-notSelected",
   };
 
+  const [navigation, setNavigation] = useState([]);
   const [user, setUser] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expenseFolders, setExpenseFolders] = useState([]);
 
-  const [navigation, setNavigation] = useState([
-    {
-      name: "Dashboard",
-      href: "#",
-      current: true,
-    },
-    {
-      name: "Add Expense Folder",
-      href: "#",
-      current: false,
-    },
-    {
-      name: "Profile",
-      href: "/profile",
-      current: false,
-    },
-    {
-      name: "Settings",
-      href: "/settings",
-      current: false,
-    },
-    {
-      name: "Sign Out",
-      href: "#",
-      current: false,
-    },
-  ]);
-
   const location = useLocation();
-
+  const navigate = useNavigate();
   const userId = location.pathname.split("/")[2]; // this will get the id of the user
-  const handleClick = (clickedItem) => {
+
+  const handleClick = (clickedItem, e) => {
+    e.preventDefault();
     // Update the state to mark the clicked item as current
     setNavigation((prevNavigation) =>
       prevNavigation.map((item) => ({
@@ -55,10 +30,18 @@ const Dashboard = () => {
       }))
     );
 
-    // console.log(clickedItem);
     if (clickedItem.name === "Add Expense Folder") {
       setIsModalOpen(true);
     }
+  };
+
+  const handleCardClick = (folder, e) => {
+    e.preventDefault();
+    navigate(
+      `/${userId}/${user.first_name.toLowerCase()}-${user.last_name.toLowerCase()}/${
+        folder.expense_folder_id
+      }/${folder.name}/expenses`
+    );
   };
 
   useEffect(() => {
@@ -74,13 +57,47 @@ const Dashboard = () => {
         );
 
         setExpenseFolders(expenseFolderData.data);
-        console.log(expenseFolderData);
+
+        setNavigation([
+          {
+            name: "Dashboard",
+            href: `/dashboard/${
+              userData.data[0].user_id
+            }/${userData.data[0].first_name.toLowerCase()}${"-"}${userData.data[0].last_name.toLowerCase()}`,
+            current: true,
+          },
+          {
+            name: "Add Expense Folder",
+            href: "",
+            current: false,
+          },
+          {
+            name: "Profile",
+            href: `/dashboard/${
+              userData.data[0].user_id
+            }/${userData.data[0].first_name.toLowerCase()}${"-"}${userData.data[0].last_name.toLowerCase()}/profile`,
+            current: false,
+          },
+          {
+            name: "Settings",
+            href: `/dashboard/${
+              userData.data[0].user_id
+            }/${userData.data[0].first_name.toLowerCase()}${"-"}${userData.data[0].last_name.toLowerCase()}/settings`,
+            current: false,
+          },
+          {
+            name: "Sign Out",
+            href: "#",
+            current: false,
+          },
+        ]);
       } catch (err) {
         console.log(err);
       }
     };
 
     getData();
+    console.log(user);
   }, [userId]);
 
   return (
@@ -101,7 +118,7 @@ const Dashboard = () => {
                           : classname.notSelected
                       }
                       aria-current={item.current ? "page" : undefined}
-                      onClick={() => handleClick(item)}
+                      onClick={(e) => handleClick(item, e)}
                     >
                       {item.name}
                     </a>
@@ -123,7 +140,10 @@ const Dashboard = () => {
 
       <div className="cards-container">
         {expenseFolders.map((expenseFolder) => (
-          <div className="card">
+          <div
+            className="card"
+            onClick={(e) => handleCardClick(expenseFolder, e)}
+          >
             <div className="card-title-container">
               <h2 className="card-title">{expenseFolder.name}</h2>
             </div>
@@ -139,7 +159,8 @@ const Dashboard = () => {
       {isModalOpen && (
         <ExpenseFolderModal
           isOpen={isModalOpen}
-          closeModal={() => setIsModalOpen(false)}
+          closeModal={setIsModalOpen}
+          navLinks={navigation}
         />
       )}
     </div>

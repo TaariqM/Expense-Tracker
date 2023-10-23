@@ -105,23 +105,54 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  /* justify-content: flex-start; */
+  justify-content: space-between;
   align-items: flex-start;
-  align-content: space-around;
+  align-content: flex-start;
   height: 100%;
   width: 100%;
   padding-top: 20px;
 }
 
 .card {
-  margin-left: auto;
+  /* margin-left: auto;
   margin-right: auto;
-  margin-top: auto;
-  background-color: rgb(245, 245, 245);
+  margin-top: auto; */
+  margin: 0 30px 20px 30px;
+  background-color: rgb(235, 235, 235);
   width: 28%;
   height: 100%;
   padding-bottom: 48px;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.buttons-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.cardBtn {
+  display: flex;
+  width: 30%;
+  justify-content: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border-radius: 6px;
+  border-width: 0px;
+  background-color: rgb(31 41 55);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.card:hover {
+  /* background-color: rgb(242, 242, 242); */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 @media screen and (min-width: 640px) {

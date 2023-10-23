@@ -4,14 +4,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styling/modal.css";
 
-const ExpenseFolderModal = ({ isOpen, closeModal }) => {
+const ExpenseFolderModal = ({ isOpen, closeModal, navLinks }) => {
   const [expenseFolder, setExpenseFolder] = useState({
     folderName: "",
     userId: null,
   });
 
   const location = useLocation();
-  // const navigation = useNavigate();
+  const navigation = useNavigate();
   const currentUserId = location.pathname.split("/")[2].split("#")[0];
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +22,11 @@ const ExpenseFolderModal = ({ isOpen, closeModal }) => {
       );
       // props.setModalOpen(false);
       closeModal(false);
+      if (navLinks) {
+        if (navLinks[0].href) {
+          navigation(navLinks[0].href);
+        }
+      }
     } catch (err) {
       console.log(err);
     }
@@ -37,13 +42,28 @@ const ExpenseFolderModal = ({ isOpen, closeModal }) => {
     console.log(expenseFolder);
   };
 
+  const handleOutsideModalClick = (e) => {
+    e.preventDefault();
+    closeModal(false);
+    if (navLinks) {
+      if (navLinks[0].href) {
+        navLinks[1].current = false;
+        navLinks[0].current = true;
+        navigation(navLinks[0].href);
+      }
+    }
+  };
+
   // this function will handle clicks inside the modal content
   const handleContentClick = (e) => {
     e.stopPropagation(); // Prevents the click event from propagating to the overlay
   };
 
   return (
-    <div className={`modal ${isOpen ? "open" : ""}`} onClick={closeModal}>
+    <div
+      className={`modal ${isOpen ? "open" : ""}`}
+      onClick={handleOutsideModalClick}
+    >
       <div className="modal-overlay">
         <div className="modal-content" onClick={handleContentClick}>
           <div className="modal-title-container">

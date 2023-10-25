@@ -21,7 +21,7 @@ const Expenses = () => {
     e.preventDefault();
     setExpenses((prevExpenses) => ({
       ...prevExpenses,
-      [e.target.name]: e.target.val,
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -42,20 +42,45 @@ const Expenses = () => {
 
         <div className="table-section-container">
           <table>
-            <tr>
-              <th>Name</th>
-              <th>Amount</th>
-              <th>Category</th>
-              <th>Description</th>
-              <th>Date</th>
-            </tr>
-            <tr>
-              <td>test</td>
-              <td>test</td>
-              <td>test</td>
-              <td>test</td>
-              <td>test</td>
-            </tr>
+            <thead>
+              <tr>
+                <th>
+                  <div>Name</div>
+                </th>
+                <th>
+                  <div>Amount</div>
+                </th>
+                <th>
+                  <div>Category</div>
+                </th>
+                <th>
+                  <div>Description</div>
+                </th>
+                <th>
+                  <div>Date</div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div>test</div>
+                </td>
+                <td>
+                  <div>test</div>
+                </td>
+                <td>
+                  <div>test</div>
+                </td>
+                <td>
+                  <div>test</div>
+                </td>
+                <td>
+                  <div>test</div>
+                </td>
+              </tr>
+            </tbody>
+
             {/* {expenses.map((expense) => (
               <tr>
                 <td>{expense.title}</td>
@@ -90,7 +115,7 @@ const Expenses = () => {
 
       <div className="total-amount-container">
         <div className="total-header">
-          <h1>Header 2</h1>
+          <h1>Total Amount: </h1>
         </div>
 
         <div className="total-amount">

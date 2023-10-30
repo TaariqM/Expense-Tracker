@@ -102,6 +102,21 @@ app.get("/api/v1/expenseFolder/:id", (request, response) => {
   });
 });
 
+app.get("/api/v1/expenseFolder/:id/:expId", (request, response) => {
+  const userId = request.params.id;
+  const expId = request.params.expId;
+  const q =
+    "SELECT `name` FROM expense_folder WHERE `user_id` = ? AND `expense_folder_id` = ?";
+
+  db.query(q, [userId, expId], (err, data) => {
+    if (err) {
+      return response.status(500).json(err);
+    } else {
+      return response.status(200).json(data);
+    }
+  });
+});
+
 app.listen(8800, () => {
   console.log("Connected to backend");
 });

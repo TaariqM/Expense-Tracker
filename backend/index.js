@@ -117,6 +117,43 @@ app.get("/api/v1/expenseFolder/:id/:expId", (request, response) => {
   });
 });
 
+app.post("/api/v1/expense", (request, response) => {
+  const q =
+    "INSERT INTO expense (`user_id`, `expense_folder_id`, `title`, `amount`, `category`, `desc`, `date`) VALUES (?)";
+  const values = [
+    request.body.user_Id,
+    request.body.expenseFolder_Id,
+    request.body.title,
+    request.body.amount,
+    request.body.category,
+    request.body.desc,
+    request.body.date,
+  ];
+
+  db.query(q, [values], (err, data) => {
+    if (err) {
+      return response.status(500).json(err);
+    } else {
+      return response.status(200).json(data);
+    }
+  });
+});
+
+app.get("/api/v1/expense/:id/:expId", (request, response) => {
+  const q =
+    "SELECT * FROM expense WHERE `user_id` = ? AND `expense_folder_id` = ?";
+  const userId = request.params.id;
+  const expId = request.params.expId;
+
+  db.query(q, [userId, expId], (err, data) => {
+    if (err) {
+      return response.status(500).json(err);
+    } else {
+      return response.status(200).json(data);
+    }
+  });
+});
+
 app.listen(8800, () => {
   console.log("Connected to backend");
 });

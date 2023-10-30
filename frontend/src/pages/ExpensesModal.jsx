@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../styling/modal.css";
 
 const ExpensesModal = ({
@@ -9,23 +10,24 @@ const ExpensesModal = ({
   userId,
   expenseFolderId,
   navLink,
+  addRow,
 }) => {
-  const [expenses, setExpenses] = useState({
+  const [expense, setExpense] = useState({
+    user_Id: userId,
+    expenseFolder_Id: expenseFolderId,
     title: "",
     amount: null,
     category: "",
     desc: "",
     date: "",
   });
-  //   const [userFname, setUserFname] = useState("");
-  //   const [userLname, setUserLname] = userState("");
 
   const navigation = useNavigate();
 
   const handleChange = (e) => {
     e.preventDefault();
-    setExpenses((prevExpenses) => ({
-      ...prevExpenses,
+    setExpense((prevExpense) => ({
+      ...prevExpense,
       [e.target.name]: e.target.value,
     }));
   };
@@ -43,22 +45,19 @@ const ExpensesModal = ({
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    // e.preventDefault();
+    console.log("User Id: ", userId);
+
+    try {
+      await axios.post("http://localhost:8800/api/v1/expense", expense);
+    } catch (err) {
+      console.log("Error: ", err);
+    }
+    // console.log(expense);
+    // addExpense((prevExpenses) => [...prevExpenses, expense]);
+    addRow(true);
   };
-
-  //   useEffect(() => {
-  //     const getData = async () => {
-  //         try {
-  //             const userData = await axios.get("http://localhost:8800/api/v1/user/" + userId);
-  //         }
-  //         catch (err) {
-  //             console.log(err);
-  //         }
-  //     };
-
-  //     getData();
-  //   }, [userId, expenseFolderId]);
 
   return (
     <div

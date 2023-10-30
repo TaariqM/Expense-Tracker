@@ -6,13 +6,8 @@ import ExpensesModal from "./ExpensesModal";
 import "../styling/expenses.css";
 
 const Expenses = () => {
-  // const [expenses, setExpenses] = useState({
-  //   title: "",
-  //   amount: null,
-  //   category: "",
-  //   desc: "",
-  //   date: "",
-  // });
+  const [expenses, setExpenses] = useState([]);
+  // const [newExpense, setNewExpense] = useState([]);
   const [expensefolderName, setExpenseFolderName] = useState([]);
   const [newRow, setNewRow] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,16 +40,18 @@ const Expenses = () => {
         );
         setExpenseFolderName(expenseFolderData.data[0].name);
 
-        // const userData = await axios.get(
-        //   "http://localhost:8800/api/v1/user/" + userId
-        // );
-        // console.log(folderData.data[0].name);
+        const allExpenses = await axios.get(
+          "http://localhost:8800/api/v1/expense/" + userId + "/" + expFolderId
+        );
+        console.log(allExpenses.data);
+        setExpenses(allExpenses.data);
       } catch (err) {
         console.log(err);
       }
     };
 
     getData();
+    console.log(expenses);
   }, [userId, expFolderId]);
 
   return (
@@ -94,80 +91,16 @@ const Expenses = () => {
               </tr>
             </thead>
             <tbody>
-              {/* {newRow && (
-                <tr>
-                  <th>
-                    <input type="text" name="title" onChange={handleChange} />
-                  </th>
-                  <th>
-                    <input
-                      type="number"
-                      name="amount"
-                      onChange={handleChange}
-                    />
-                  </th>
-                  <th>
-                    <input
-                      type="text"
-                      name="category"
-                      onChange={handleChange}
-                    />
-                  </th>
-                  <th>
-                    <input type="text" name="desc" onChange={handleChange} />
-                  </th>
-                  <th>
-                    <input type="date" name="date" onChange={handleChange} />
-                  </th>
+              {expenses.map((expense) => (
+                <tr key={expense.expense_id}>
+                  <td>{expense.title}</td>
+                  <td>{expense.amount}</td>
+                  <td>{expense.category}</td>
+                  <td>{expense.desc}</td>
+                  <td>{expense.date}</td>
                 </tr>
-              )} */}
-              {/* <tr>
-                <td>
-                  <div>test</div>
-                </td>
-                <td>
-                  <div>test</div>
-                </td>
-                <td>
-                  <div>test</div>
-                </td>
-                <td>
-                  <div>test</div>
-                </td>
-                <td>
-                  <div>test</div>
-                </td>
-              </tr> */}
+              ))}
             </tbody>
-
-            {/* {expenses.map((expense) => (
-              <tr>
-                <td>{expense.title}</td>
-                <td>{expense.amount}</td>
-                <td>{expense.category}</td>
-                <td>{expense.desc}</td>
-                <td>{expense.date}</td>
-              </tr>
-            ))} */}
-            {/* {newRow && (
-              <tr>
-                <th>
-                  <input type="text" name="title" onChange={handleChange} />
-                </th>
-                <th>
-                  <input type="number" name="amount" onChange={handleChange} />
-                </th>
-                <th>
-                  <input type="text" name="category" onChange={handleChange} />
-                </th>
-                <th>
-                  <input type="text" name="desc" onChange={handleChange} />
-                </th>
-                <th>
-                  <input type="date" name="date" onChange={handleChange} />
-                </th>
-              </tr>
-            )} */}
           </table>
         </div>
       </div>
@@ -189,6 +122,7 @@ const Expenses = () => {
           userId={userId}
           expenseFolderId={expFolderId}
           navLink={location.pathname}
+          addRow={setNewRow}
         />
       )}
     </div>

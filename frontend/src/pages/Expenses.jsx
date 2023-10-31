@@ -3,14 +3,18 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import ExpensesModal from "./ExpensesModal";
+import EditExpenseModal from "./EditExpenseModal";
+import sumOfTotalExpenses from "../calculation/SumOfTotalExpenses";
 import "../styling/expenses.css";
 
 const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
   // const [newExpense, setNewExpense] = useState([]);
   const [expensefolderName, setExpenseFolderName] = useState([]);
-  const [newRow, setNewRow] = useState(false);
+  // const [newRow, setNewRow] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [expenseToEdit, setExpenseToEdit] = useState({});
   const location = useLocation();
   const expFolderId = location.pathname.split("/")[3];
   const userId = location.pathname.split("/")[1];
@@ -18,7 +22,13 @@ const Expenses = () => {
   const handleClick = (e) => {
     e.preventDefault();
     setIsModalOpen(true);
-    setNewRow(true);
+    // setNewRow(true);
+  };
+
+  const handleRowClick = (e, item) => {
+    e.preventDefault();
+    setIsEditModalOpen(true);
+    setExpenseToEdit(item);
   };
 
   // const handleChange = (e) => {
@@ -51,7 +61,7 @@ const Expenses = () => {
     };
 
     getData();
-    console.log(expenses);
+    // console.log(expenses);
   }, [userId, expFolderId]);
 
   return (
@@ -92,12 +102,21 @@ const Expenses = () => {
             </thead>
             <tbody>
               {expenses.map((expense) => (
-                <tr key={expense.expense_id}>
+                <tr
+                  key={expense.expense_id}
+                  onClick={(e) => handleRowClick(e, expense)}
+                >
                   <td>{expense.title}</td>
-                  <td>{expense.amount}</td>
+                  <td>${expense.amount.toFixed(2)}</td>
                   <td>{expense.category}</td>
                   <td>{expense.desc}</td>
-                  <td>{expense.date}</td>
+                  <td>
+                    {new Date(expense.date).toLocaleDateString("en-US", {
+                      month: "2-digit",
+                      day: "2-digit",
+                      year: "numeric",
+                    })}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -111,7 +130,7 @@ const Expenses = () => {
         </div>
 
         <div className="total-amount">
-          <h2>$1000.00</h2>
+          <h2>${sumOfTotalExpenses(expenses).toFixed(2)}</h2>
         </div>
       </div>
 
@@ -122,7 +141,18 @@ const Expenses = () => {
           userId={userId}
           expenseFolderId={expFolderId}
           navLink={location.pathname}
-          addRow={setNewRow}
+          // addRow={setNewRow}
+        />
+      )}
+
+      {isEditModalOpen && (
+        <EditExpenseModal
+          isOpen={isEditModalOpen}
+          closeModal={setIsEditModalOpen}
+          userId={userId}
+          expenseFolderId={expFolderId}
+          navLink={location.pathname}
+          expense={expenseToEdit}
         />
       )}
     </div>

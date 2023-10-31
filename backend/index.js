@@ -154,6 +154,32 @@ app.get("/api/v1/expense/:id/:expId", (request, response) => {
   });
 });
 
+app.post("/api/v1/expense/:expenseId", (request, response) => {
+  const q =
+    "UPDATE expense SET `title` = ?, `amount` = ?, `category` = ?, `desc` = ?, `date` = ? WHERE expense_id = ?";
+
+  const expense_Id = request.params.expenseId;
+
+  db.query(
+    q,
+    [
+      request.body.title,
+      request.body.amount,
+      request.body.category,
+      request.body.desc,
+      request.body.date,
+      expense_Id,
+    ],
+    (err, data) => {
+      if (err) {
+        return response.status(500).json(err);
+      } else {
+        return response.status(200).json(data);
+      }
+    }
+  );
+});
+
 app.listen(8800, () => {
   console.log("Connected to backend");
 });

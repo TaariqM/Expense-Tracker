@@ -10,7 +10,7 @@ const ExpensesModal = ({
   userId,
   expenseFolderId,
   navLink,
-  addRow,
+  // addRow,
 }) => {
   const [expense, setExpense] = useState({
     user_Id: userId,
@@ -56,7 +56,7 @@ const ExpensesModal = ({
     }
     // console.log(expense);
     // addExpense((prevExpenses) => [...prevExpenses, expense]);
-    addRow(true);
+    // addRow(true);
   };
 
   return (
@@ -82,7 +82,12 @@ const ExpensesModal = ({
               <div className="container">
                 <label>Amount:</label>
                 <div className="model-form-input-container">
-                  <input type="number" name="amount" onChange={handleChange} />
+                  <input
+                    type="number"
+                    name="amount"
+                    step=".01"
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
 

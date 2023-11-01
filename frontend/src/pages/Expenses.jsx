@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import ExpensesModal from "./ExpensesModal";
 import EditExpenseModal from "./EditExpenseModal";
+import NavigationBar from "./NavigationBar";
 import sumOfTotalExpenses from "../calculation/SumOfTotalExpenses";
 import "../styling/expenses.css";
 
@@ -15,6 +16,9 @@ const Expenses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [expenseToEdit, setExpenseToEdit] = useState({});
+  // const [user, setUser] = useState({});
+  const [navigation, setNavigation] = useState([]);
+
   const location = useLocation();
   const expFolderId = location.pathname.split("/")[3];
   const userId = location.pathname.split("/")[1];
@@ -53,8 +57,47 @@ const Expenses = () => {
         const allExpenses = await axios.get(
           "http://localhost:8800/api/v1/expense/" + userId + "/" + expFolderId
         );
-        console.log(allExpenses.data);
+        // console.log(allExpenses.data);
         setExpenses(allExpenses.data);
+
+        const userData = await axios.get(
+          "http://localhost:8800/api/v1/user/" + userId
+        );
+        // setUser({ ...userData.data[0] }); // the axios responses are usually in a 'data' property
+
+        setNavigation([
+          {
+            name: "Dashboard",
+            href: `/dashboard/${
+              userData.data[0].user_id
+            }/${userData.data[0].first_name.toLowerCase()}${"-"}${userData.data[0].last_name.toLowerCase()}`,
+            current: true,
+          },
+          // {
+          //   name: "Add Expense Folder",
+          //   href: "",
+          //   current: false,
+          // },
+          {
+            name: "Profile",
+            href: `/dashboard/${
+              userData.data[0].user_id
+            }/${userData.data[0].first_name.toLowerCase()}${"-"}${userData.data[0].last_name.toLowerCase()}/profile`,
+            current: false,
+          },
+          {
+            name: "Settings",
+            href: `/dashboard/${
+              userData.data[0].user_id
+            }/${userData.data[0].first_name.toLowerCase()}${"-"}${userData.data[0].last_name.toLowerCase()}/settings`,
+            current: false,
+          },
+          {
+            name: "Sign Out",
+            href: "#",
+            current: false,
+          },
+        ]);
       } catch (err) {
         console.log(err);
       }
@@ -67,6 +110,11 @@ const Expenses = () => {
   return (
     <div className="container">
       <div className="main-table-container">
+        <NavigationBar
+          navigation={navigation}
+          setNavigation={setNavigation}
+          link={location.pathname}
+        />
         <div className="header-btn-section">
           <div className="header-section">
             <h1>{expensefolderName}</h1>
@@ -110,13 +158,7 @@ const Expenses = () => {
                   <td>${expense.amount.toFixed(2)}</td>
                   <td>{expense.category}</td>
                   <td>{expense.desc}</td>
-                  <td>
-                    {new Date(expense.date).toLocaleDateString("en-US", {
-                      month: "2-digit",
-                      day: "2-digit",
-                      year: "numeric",
-                    })}
-                  </td>
+                  <td>{new Date(expense.date).toISOString().split("T")[0]}</td>
                 </tr>
               ))}
             </tbody>

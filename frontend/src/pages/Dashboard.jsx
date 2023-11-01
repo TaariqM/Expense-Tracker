@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import ExpenseFolderModal from "./ExpenseFolderModal";
+import NavigationBar from "./NavigationBar";
 import "../styling/modal.css";
 
 const Dashboard = () => {
-  let classname = {
-    selected: "item-selected",
-    notSelected: "item-notSelected",
-  };
+  // let classname = {
+  //   selected: "item-selected",
+  //   notSelected: "item-notSelected",
+  // };
 
   const [navigation, setNavigation] = useState([]);
   const [user, setUser] = useState({});
@@ -20,20 +21,20 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const userId = location.pathname.split("/")[2]; // this will get the id of the user
 
-  const handleClick = (clickedItem, e) => {
-    e.preventDefault();
-    // Update the state to mark the clicked item as current
-    setNavigation((prevNavigation) =>
-      prevNavigation.map((item) => ({
-        ...item,
-        current: item.name === clickedItem.name,
-      }))
-    );
+  // const handleClick = (clickedItem, e) => {
+  //   e.preventDefault();
+  //   // Update the state to mark the clicked item as current
+  //   setNavigation((prevNavigation) =>
+  //     prevNavigation.map((item) => ({
+  //       ...item,
+  //       current: item.name === clickedItem.name,
+  //     }))
+  //   );
 
-    if (clickedItem.name === "Add Expense Folder") {
-      setIsModalOpen(true);
-    }
-  };
+  //   if (clickedItem.name === "Add Expense Folder") {
+  //     setIsModalOpen(true);
+  //   }
+  // };
 
   const handleCardClick = (folder, e) => {
     e.preventDefault();
@@ -97,12 +98,12 @@ const Dashboard = () => {
     };
 
     getData();
-    console.log(user);
+    // console.log(user);
   }, [userId]);
 
   return (
     <div className={`main ${isModalOpen ? "modal-open" : ""}`}>
-      <nav className="navigation-bar-container">
+      {/* <nav className="navigation-bar-container">
         <div className="navigation-bar">
           <div className="navigation-bar-items-container">
             <div className="navigation-bar-items">
@@ -128,7 +129,13 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-      </nav>
+      </nav> */}
+      <NavigationBar
+        navigation={navigation}
+        setNavigation={setNavigation}
+        openModal={setIsModalOpen}
+        link={location.pathname}
+      />
 
       <div className="dashboard-container">
         <div className="dashboard-title-container">

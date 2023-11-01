@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../styling/edit_expense_modal.css";
 
 const EditExpenseModal = ({
   isOpen,
@@ -18,13 +19,14 @@ const EditExpenseModal = ({
     amount: expense.amount,
     category: expense.category,
     desc: expense.desc,
-    date: expense.date,
+    date: new Date(expense.date).toISOString().split("T")[0],
   });
 
   const navigation = useNavigate();
 
   const handleChange = (e) => {
     e.preventDefault();
+    console.log(e.target.value);
     setNewExpense((prevExpense) => ({
       ...prevExpense,
       [e.target.name]: e.target.value,
@@ -32,26 +34,38 @@ const EditExpenseModal = ({
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     try {
       await axios.post(
         "http://localhost:8800/api/v1/expense/" + expense.expense_id,
         newExpense
       );
+
+      // if (navLink) {
+      //   navigation(navLink);
+      // }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleDelete = (e) => {
-    e.preventDefault();
+  const handleDelete = async (e) => {
+    // e.preventDefault();
+
+    try {
+      await axios.delete(
+        "http://localhost:8800/api/v1/expense/" + expense.expense_id
+      );
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   // this function will handle clicks inside the modal content
   const handleContentClick = (e) => {
     e.stopPropagation(); // Prevents the click event from propagating to the overlay
-    // console.log(newExpense);
+    console.log(newExpense.date);
     // console.log(expense);
   };
 
@@ -95,7 +109,7 @@ const EditExpenseModal = ({
                     type="number"
                     name="amount"
                     step=".01"
-                    value={newExpense.amount.toFixed(2)}
+                    value={newExpense.amount}
                     onChange={handleChange}
                   />
                 </div>
@@ -137,12 +151,12 @@ const EditExpenseModal = ({
                 </div>
               </div>
 
-              <div className="modal-button-container">
-                <button className="modal-button" type="submit">
+              <div className="edit-modal-button-container">
+                <button className="edit-modal-button" type="submit">
                   Edit
                 </button>
 
-                <button className="modal-button" onClick={handleDelete}>
+                <button className="edit-modal-button" onClick={handleDelete}>
                   Delete
                 </button>
               </div>

@@ -180,6 +180,19 @@ app.post("/api/v1/expense/:expenseId", (request, response) => {
   );
 });
 
+app.delete("/api/v1/expense/:expenseId", (request, response) => {
+  const q = "DELETE FROM expense WHERE expense_id = ?";
+  const expense_Id = request.params.expenseId;
+
+  db.query(q, [expense_Id], (err, data) => {
+    if (err) {
+      return response.status(500).json(err);
+    } else {
+      return response.status(200).json(data);
+    }
+  });
+});
+
 app.listen(8800, () => {
   console.log("Connected to backend");
 });

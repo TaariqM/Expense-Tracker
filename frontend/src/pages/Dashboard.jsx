@@ -5,36 +5,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ExpenseFolderModal from "./ExpenseFolderModal";
 import NavigationBar from "./NavigationBar";
 import "../styling/modal.css";
+import SignOutModal from "./SignOutModal";
 
 const Dashboard = () => {
-  // let classname = {
-  //   selected: "item-selected",
-  //   notSelected: "item-notSelected",
-  // };
-
   const [navigation, setNavigation] = useState([]);
   const [user, setUser] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSignOutModalOpen, setIsSignOutModelOpen] = useState(false);
   const [expenseFolders, setExpenseFolders] = useState([]);
 
   const location = useLocation();
   const navigate = useNavigate();
   const userId = location.pathname.split("/")[2]; // this will get the id of the user
-
-  // const handleClick = (clickedItem, e) => {
-  //   e.preventDefault();
-  //   // Update the state to mark the clicked item as current
-  //   setNavigation((prevNavigation) =>
-  //     prevNavigation.map((item) => ({
-  //       ...item,
-  //       current: item.name === clickedItem.name,
-  //     }))
-  //   );
-
-  //   if (clickedItem.name === "Add Expense Folder") {
-  //     setIsModalOpen(true);
-  //   }
-  // };
 
   const handleCardClick = (folder, e) => {
     e.preventDefault();
@@ -73,22 +55,8 @@ const Dashboard = () => {
             current: false,
           },
           {
-            name: "Profile",
-            href: `/dashboard/${
-              userData.data[0].user_id
-            }/${userData.data[0].first_name.toLowerCase()}${"-"}${userData.data[0].last_name.toLowerCase()}/profile`,
-            current: false,
-          },
-          {
-            name: "Settings",
-            href: `/dashboard/${
-              userData.data[0].user_id
-            }/${userData.data[0].first_name.toLowerCase()}${"-"}${userData.data[0].last_name.toLowerCase()}/settings`,
-            current: false,
-          },
-          {
             name: "Sign Out",
-            href: "#",
+            href: "",
             current: false,
           },
         ]);
@@ -98,42 +66,15 @@ const Dashboard = () => {
     };
 
     getData();
-    // console.log(user);
   }, [userId]);
 
   return (
     <div className={`main ${isModalOpen ? "modal-open" : ""}`}>
-      {/* <nav className="navigation-bar-container">
-        <div className="navigation-bar">
-          <div className="navigation-bar-items-container">
-            <div className="navigation-bar-items">
-              <div className="navigation-items">
-                <div className="items">
-                  {navigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className={
-                        item.current
-                          ? classname.selected
-                          : classname.notSelected
-                      }
-                      aria-current={item.current ? "page" : undefined}
-                      onClick={(e) => handleClick(item, e)}
-                    >
-                      {item.name}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav> */}
       <NavigationBar
         navigation={navigation}
         setNavigation={setNavigation}
         openModal={setIsModalOpen}
+        openSignOutModal={setIsSignOutModelOpen}
         link={location.pathname}
       />
 
@@ -167,6 +108,14 @@ const Dashboard = () => {
         <ExpenseFolderModal
           isOpen={isModalOpen}
           closeModal={setIsModalOpen}
+          navLinks={navigation}
+        />
+      )}
+
+      {isSignOutModalOpen && (
+        <SignOutModal
+          isOpen={isSignOutModalOpen}
+          closeModal={setIsSignOutModelOpen}
           navLinks={navigation}
         />
       )}

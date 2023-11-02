@@ -34,8 +34,6 @@
 
 table {
   width: 100%;
-  /* padding-left: 30px;
-  padding-right: 30px; */
   border-collapse: collapse;
 }
 
@@ -45,12 +43,6 @@ td {
   padding: 10px;
   text-align: left;
 }
-
-/* td div,
-th div {
-  padding-left: 30px;
-  padding-right: 30px;
-} */
 
 .total-amount-container {
   width: 100%;
@@ -80,7 +72,6 @@ th div {
 }
 
 tbody tr:hover {
-  /* background-color: rgb(79, 94, 117); */
   background-color: rgb(55 65 81);
   color: #fff;
 }

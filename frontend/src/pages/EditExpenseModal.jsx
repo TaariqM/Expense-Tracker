@@ -34,25 +34,17 @@ const EditExpenseModal = ({
   };
 
   const handleSubmit = async (e) => {
-    // e.preventDefault();
-
     try {
       await axios.post(
         "http://localhost:8800/api/v1/expense/" + expense.expense_id,
         newExpense
       );
-
-      // if (navLink) {
-      //   navigation(navLink);
-      // }
     } catch (err) {
       console.log(err);
     }
   };
 
   const handleDelete = async (e) => {
-    // e.preventDefault();
-
     try {
       await axios.delete(
         "http://localhost:8800/api/v1/expense/" + expense.expense_id
@@ -153,7 +145,7 @@ const EditExpenseModal = ({
 
               <div className="edit-modal-button-container">
                 <button className="edit-modal-button" type="submit">
-                  Edit
+                  Update
                 </button>
 
                 <button className="edit-modal-button" onClick={handleDelete}>

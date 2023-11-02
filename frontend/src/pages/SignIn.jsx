@@ -3,7 +3,6 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import signInValidation from "../validation/SignInValidation";
-// import "../styling/sign_in.css";
 
 const SignIn = () => {
   const [values, setValues] = useState({
@@ -21,7 +20,6 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let errorMessages = signInValidation(values);
-    // setErrors((prevErrors) => ({ ...prevErrors, errorMessages }));
 
     try {
       console.log(values);

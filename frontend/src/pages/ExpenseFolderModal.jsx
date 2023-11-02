@@ -14,13 +14,12 @@ const ExpenseFolderModal = ({ isOpen, closeModal, navLinks }) => {
   const navigation = useNavigate();
   const currentUserId = location.pathname.split("/")[2].split("#")[0];
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     try {
       await axios.post(
         "http://localhost:8800/api/v1/addExpenseFolder",
         expenseFolder
       );
-      // props.setModalOpen(false);
       closeModal(false);
       if (navLinks) {
         if (navLinks[0].href) {
@@ -33,7 +32,6 @@ const ExpenseFolderModal = ({ isOpen, closeModal, navLinks }) => {
   };
 
   const handleChange = (e) => {
-    // setExpenseFolder((prev) => ({ [e.target.name]: e.target.val }));
     setExpenseFolder((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,

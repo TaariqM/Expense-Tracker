@@ -4,19 +4,18 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import ExpensesModal from "./ExpensesModal";
 import EditExpenseModal from "./EditExpenseModal";
+import SignOutModal from "./SignOutModal";
 import NavigationBar from "./NavigationBar";
 import sumOfTotalExpenses from "../calculation/SumOfTotalExpenses";
 import "../styling/expenses.css";
 
 const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
-  // const [newExpense, setNewExpense] = useState([]);
   const [expensefolderName, setExpenseFolderName] = useState([]);
-  // const [newRow, setNewRow] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSignOutModalOpen, setIsSignOutModelOpen] = useState(false);
   const [expenseToEdit, setExpenseToEdit] = useState({});
-  // const [user, setUser] = useState({});
   const [navigation, setNavigation] = useState([]);
 
   const location = useLocation();
@@ -26,7 +25,6 @@ const Expenses = () => {
   const handleClick = (e) => {
     e.preventDefault();
     setIsModalOpen(true);
-    // setNewRow(true);
   };
 
   const handleRowClick = (e, item) => {
@@ -34,14 +32,6 @@ const Expenses = () => {
     setIsEditModalOpen(true);
     setExpenseToEdit(item);
   };
-
-  // const handleChange = (e) => {
-  //   e.preventDefault();
-  //   setExpenses((prevExpenses) => ({
-  //     ...prevExpenses,
-  //     [e.target.name]: e.target.value,
-  //   }));
-  // };
 
   useEffect(() => {
     const getData = async () => {
@@ -57,13 +47,11 @@ const Expenses = () => {
         const allExpenses = await axios.get(
           "http://localhost:8800/api/v1/expense/" + userId + "/" + expFolderId
         );
-        // console.log(allExpenses.data);
-        setExpenses(allExpenses.data);
+        setExpenses(allExpenses.data); // the axios responses are usually in a 'data' property
 
         const userData = await axios.get(
           "http://localhost:8800/api/v1/user/" + userId
         );
-        // setUser({ ...userData.data[0] }); // the axios responses are usually in a 'data' property
 
         setNavigation([
           {
@@ -73,28 +61,9 @@ const Expenses = () => {
             }/${userData.data[0].first_name.toLowerCase()}${"-"}${userData.data[0].last_name.toLowerCase()}`,
             current: true,
           },
-          // {
-          //   name: "Add Expense Folder",
-          //   href: "",
-          //   current: false,
-          // },
-          {
-            name: "Profile",
-            href: `/dashboard/${
-              userData.data[0].user_id
-            }/${userData.data[0].first_name.toLowerCase()}${"-"}${userData.data[0].last_name.toLowerCase()}/profile`,
-            current: false,
-          },
-          {
-            name: "Settings",
-            href: `/dashboard/${
-              userData.data[0].user_id
-            }/${userData.data[0].first_name.toLowerCase()}${"-"}${userData.data[0].last_name.toLowerCase()}/settings`,
-            current: false,
-          },
           {
             name: "Sign Out",
-            href: "#",
+            href: "",
             current: false,
           },
         ]);
@@ -104,7 +73,6 @@ const Expenses = () => {
     };
 
     getData();
-    // console.log(expenses);
   }, [userId, expFolderId]);
 
   return (
@@ -113,6 +81,7 @@ const Expenses = () => {
         <NavigationBar
           navigation={navigation}
           setNavigation={setNavigation}
+          openSignOutModal={setIsSignOutModelOpen}
           link={location.pathname}
         />
         <div className="header-btn-section">
@@ -183,7 +152,6 @@ const Expenses = () => {
           userId={userId}
           expenseFolderId={expFolderId}
           navLink={location.pathname}
-          // addRow={setNewRow}
         />
       )}
 
@@ -195,6 +163,14 @@ const Expenses = () => {
           expenseFolderId={expFolderId}
           navLink={location.pathname}
           expense={expenseToEdit}
+        />
+      )}
+
+      {isSignOutModalOpen && (
+        <SignOutModal
+          isOpen={isSignOutModalOpen}
+          closeModal={setIsSignOutModelOpen}
+          navLinks={navigation}
         />
       )}
     </div>

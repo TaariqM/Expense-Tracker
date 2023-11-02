@@ -10,7 +10,6 @@ const ExpensesModal = ({
   userId,
   expenseFolderId,
   navLink,
-  // addRow,
 }) => {
   const [expense, setExpense] = useState({
     user_Id: userId,
@@ -46,17 +45,11 @@ const ExpensesModal = ({
   };
 
   const handleSubmit = async (e) => {
-    // e.preventDefault();
-    console.log("User Id: ", userId);
-
     try {
       await axios.post("http://localhost:8800/api/v1/expense", expense);
     } catch (err) {
       console.log("Error: ", err);
     }
-    // console.log(expense);
-    // addExpense((prevExpenses) => [...prevExpenses, expense]);
-    // addRow(true);
   };
 
   return (

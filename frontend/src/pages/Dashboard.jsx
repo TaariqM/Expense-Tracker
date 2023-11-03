@@ -13,6 +13,8 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSignOutModalOpen, setIsSignOutModelOpen] = useState(false);
   const [expenseFolders, setExpenseFolders] = useState([]);
+  const [inputFields, setInputFields] = useState({});
+  const [expenseFolder, setExpenseFolder] = useState({});
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -25,6 +27,32 @@ const Dashboard = () => {
         folder.expense_folder_id
       }/${folder.name}/expenses`
     );
+  };
+
+  const handleButtonClick = (expId, e) => {
+    e.preventDefault();
+    console.log(expId);
+    // console.log("Before: " + inputFields[expId]);
+    console.log(inputFields);
+    console.log(inputFields[expId]);
+
+    if (e.target.name === "edit") {
+      // await axios.post("http://localhost:8800/api/v1/expenseFolder/" + expId, );
+      console.log("test");
+      setInputFields((prevFields) => ({
+        ...prevFields,
+        [expId]: !prevFields[expId],
+      }));
+      console.log(inputFields);
+    }
+
+    // console.log("After: " + inputFields[expId]);
+  };
+
+  const handleChange = (folder, e) => {
+    e.preventDefault();
+    setExpenseFolder(folder);
+    setExpenseFolder((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   useEffect(() => {
@@ -66,8 +94,23 @@ const Dashboard = () => {
     };
 
     getData();
-  }, [userId]);
+    // expenseFolders.forEach((expenseFolder) => {
+    //   setInputFields((prev) => ({
+    //     ...prev,
+    //     [expenseFolder.expense_folder_id]: false,
+    //   }));
+    // });
+  }, [userId, expenseFolders]);
 
+  useEffect(() => {
+    const initialInputFields = {};
+    expenseFolders.forEach((expenseFolder) => {
+      initialInputFields[expenseFolder.expense_folder_id] = false;
+    });
+    setInputFields(initialInputFields);
+  }, []);
+
+  // console.log(inputFields);
   return (
     <div className={`main ${isModalOpen ? "modal-open" : ""}`}>
       <NavigationBar
@@ -89,16 +132,44 @@ const Dashboard = () => {
       <div className="cards-container">
         {expenseFolders.map((expenseFolder) => (
           <div
+            key={expenseFolder.expense_folder_id}
             className="card"
             onClick={(e) => handleCardClick(expenseFolder, e)}
           >
             <div className="card-title-container">
-              <h2 className="card-title">{expenseFolder.name}</h2>
+              {inputFields[expenseFolder.expense_folder_id] ? (
+                <input
+                  type="text"
+                  name="name"
+                  value={expenseFolder.name}
+                  onChange={(e) => handleChange(expenseFolder, e)}
+                />
+              ) : (
+                <h2 className="card-title">{expenseFolder.name}</h2>
+              )}
             </div>
 
             <div className="buttons-container">
-              <button className="cardBtn">Edit</button>
-              <button className="cardBtn">Delete</button>
+              <button
+                className="cardBtn"
+                name="edit"
+                onClick={(e) =>
+                  handleButtonClick(expenseFolder.expense_folder_id, e)
+                }
+              >
+                {inputFields[expenseFolder.expense_folder_id]
+                  ? "Update"
+                  : "Edit"}
+              </button>
+              <button
+                className="cardBtn"
+                name="delete"
+                onClick={(e) =>
+                  handleButtonClick(expenseFolder.expense_folder_id, e)
+                }
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))}

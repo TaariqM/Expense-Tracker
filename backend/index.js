@@ -193,6 +193,13 @@ app.delete("/api/v1/expense/:expenseId", (request, response) => {
   });
 });
 
+app.post("/api/v1/expenseFolder/:expId", (request, response) => {
+  const q = "UPDATE expense_folder SET `name` = ? WHERE `expense_folder_id = ?";
+  const expenseFolder_Id = request.params.expId;
+
+  // db.query(q, [request.body.])
+});
+
 app.listen(8800, () => {
   console.log("Connected to backend");
 });

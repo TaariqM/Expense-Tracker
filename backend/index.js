@@ -181,7 +181,7 @@ app.post("/api/v1/expense/:expenseId", (request, response) => {
 });
 
 app.delete("/api/v1/expense/:expenseId", (request, response) => {
-  const q = "DELETE FROM expense WHERE expense_id = ?";
+  const q = "DELETE FROM expense WHERE `expense_id` = ?";
   const expense_Id = request.params.expenseId;
 
   db.query(q, [expense_Id], (err, data) => {
@@ -194,10 +194,17 @@ app.delete("/api/v1/expense/:expenseId", (request, response) => {
 });
 
 app.post("/api/v1/expenseFolder/:expId", (request, response) => {
-  const q = "UPDATE expense_folder SET `name` = ? WHERE `expense_folder_id = ?";
+  const q =
+    "UPDATE expense_folder SET `name` = ? WHERE `expense_folder_id` = ?";
   const expenseFolder_Id = request.params.expId;
 
-  // db.query(q, [request.body.])
+  db.query(q, [request.body.name, expenseFolder_Id], (err, data) => {
+    if (err) {
+      return response.status(500).json(err);
+    } else {
+      return response.status(200).json(data);
+    }
+  });
 });
 
 app.listen(8800, () => {

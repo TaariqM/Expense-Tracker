@@ -15,44 +15,109 @@ const Dashboard = () => {
   const [expenseFolders, setExpenseFolders] = useState([]);
   const [inputFields, setInputFields] = useState({});
   const [expenseFolder, setExpenseFolder] = useState({});
+  const [elementName, setElementName] = useState("edit");
 
   const location = useLocation();
   const navigate = useNavigate();
   const userId = location.pathname.split("/")[2]; // this will get the id of the user
 
+  // let elementName = {
+  //   edit: "edit",
+  //   update: "update",
+  // }
+
   const handleCardClick = (folder, e) => {
     e.preventDefault();
-    navigate(
-      `/${userId}/${user.first_name.toLowerCase()}-${user.last_name.toLowerCase()}/${
-        folder.expense_folder_id
-      }/${folder.name}/expenses`
-    );
+
+    const isButton =
+      e.target.tagName === "BUTTON" &&
+      ["edit", "delete", "update"].includes(e.target.name);
+
+    const isInput = e.target.tagName === "INPUT";
+
+    if (!isButton && !isInput) {
+      navigate(
+        `/${userId}/${user.first_name.toLowerCase()}-${user.last_name.toLowerCase()}/${
+          folder.expense_folder_id
+        }/${folder.name}/expenses`
+      );
+    }
   };
 
-  const handleButtonClick = (expId, e) => {
+  const handleButtonClick = async (expId, e) => {
     e.preventDefault();
-    console.log(expId);
+    // console.log(expId);
     // console.log("Before: " + inputFields[expId]);
-    console.log(inputFields);
-    console.log(inputFields[expId]);
+    // console.log(inputFields);
+    // console.log(inputFields[expId]);
+    console.log("test");
+
+    setInputFields((prevFields) => ({
+      ...prevFields,
+      [expId]: !prevFields[expId],
+    }));
 
     if (e.target.name === "edit") {
-      // await axios.post("http://localhost:8800/api/v1/expenseFolder/" + expId, );
-      console.log("test");
-      setInputFields((prevFields) => ({
-        ...prevFields,
-        [expId]: !prevFields[expId],
-      }));
-      console.log(inputFields);
+      setElementName("update");
+      console.log("test 2");
+    }
+    if (e.target.name === "update") {
+      console.log(
+        expenseFolders.find((item) => item.expense_folder_id === expId)
+      );
+      try {
+        await axios.post(
+          "http://localhost:8800/api/v1/expenseFolder/" + expId,
+          expenseFolders.find((item) => item.expense_folder_id === expId)
+        );
+      } catch (err) {
+        console.log(err);
+      }
+      // console.log("test");
+
+      setElementName("edit");
+      // console.log(inputFields);
     }
 
     // console.log("After: " + inputFields[expId]);
   };
 
-  const handleChange = (folder, e) => {
+  const handleChange = (folderId, e) => {
     e.preventDefault();
-    setExpenseFolder(folder);
-    setExpenseFolder((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    // expenseFolders.forEach((expenseFolder) => {
+    //   if (expenseFolder.expense_folder_id === folder.expense_folder_id) {
+    //   }
+    // });
+    // setExpenseFolders((prevFolders) => ({
+    //   ...prevFolders, expenseFolders.find((item) => item.expense_folder_id === folderId)
+    // }))
+
+    updateExpenseFolderName(folderId, e.target.value);
+
+    // setExpenseFolder((prevFolder) => ({
+    //   ...prevFolder,
+    //   [folderId]: {
+    //     ...prevFolder[folderId],
+    //     name: e.target.value,
+    //   },
+    // }));
+
+    // setExpenseFolder(folder);
+    // setExpenseFolder((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const updateExpenseFolderName = (folderId, newName) => {
+    setExpenseFolders((prevExpenseFolders) => {
+      return prevExpenseFolders.map((folder) => {
+        if (folder.expense_folder_id === folderId) {
+          // Update the name property for the target folder
+          return { ...folder, name: newName };
+        }
+
+        // Return unchanged object for other folders
+        return folder;
+      });
+    });
   };
 
   useEffect(() => {
@@ -62,12 +127,6 @@ const Dashboard = () => {
           "http://localhost:8800/api/v1/user/" + userId
         );
         setUser({ ...userData.data[0] }); // the axios responses are usually in a 'data' property
-
-        const expenseFolderData = await axios.get(
-          "http://localhost:8800/api/v1/expenseFolder/" + userId
-        );
-
-        setExpenseFolders(expenseFolderData.data);
 
         setNavigation([
           {
@@ -93,14 +152,38 @@ const Dashboard = () => {
       }
     };
 
+    const getExpenseFolderData = async () => {
+      try {
+        const expenseFolderData = await axios.get(
+          "http://localhost:8800/api/v1/expenseFolder/" + userId
+        );
+
+        setExpenseFolders(expenseFolderData.data);
+
+        const initialExpenseFolder = {};
+        expenseFolderData.data.forEach((folder) => {
+          initialExpenseFolder[folder.expense_folder_id] = {
+            name: folder.name,
+          };
+        });
+
+        setExpenseFolder(initialExpenseFolder);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     getData();
+    getExpenseFolderData();
     // expenseFolders.forEach((expenseFolder) => {
     //   setInputFields((prev) => ({
     //     ...prev,
     //     [expenseFolder.expense_folder_id]: false,
     //   }));
     // });
-  }, [userId, expenseFolders]);
+
+    console.log(expenseFolder);
+  }, [userId]);
 
   useEffect(() => {
     const initialInputFields = {};
@@ -141,8 +224,16 @@ const Dashboard = () => {
                 <input
                   type="text"
                   name="name"
-                  value={expenseFolder.name}
-                  onChange={(e) => handleChange(expenseFolder, e)}
+                  value={
+                    expenseFolders.find(
+                      (item) =>
+                        item.expense_folder_id ===
+                        expenseFolder.expense_folder_id
+                    ).name
+                  }
+                  onChange={(e) =>
+                    handleChange(expenseFolder.expense_folder_id, e)
+                  }
                 />
               ) : (
                 <h2 className="card-title">{expenseFolder.name}</h2>
@@ -152,7 +243,7 @@ const Dashboard = () => {
             <div className="buttons-container">
               <button
                 className="cardBtn"
-                name="edit"
+                name={elementName}
                 onClick={(e) =>
                   handleButtonClick(expenseFolder.expense_folder_id, e)
                 }

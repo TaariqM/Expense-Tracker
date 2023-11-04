@@ -46,25 +46,18 @@ const Dashboard = () => {
 
   const handleButtonClick = async (expId, e) => {
     e.preventDefault();
-    // console.log(expId);
-    // console.log("Before: " + inputFields[expId]);
-    // console.log(inputFields);
-    // console.log(inputFields[expId]);
-    console.log("test");
-
-    setInputFields((prevFields) => ({
-      ...prevFields,
-      [expId]: !prevFields[expId],
-    }));
 
     if (e.target.name === "edit") {
+      setInputFields((prevFields) => ({
+        ...prevFields,
+        [expId]: !prevFields[expId],
+      }));
       setElementName("update");
-      console.log("test 2");
     }
     if (e.target.name === "update") {
-      console.log(
-        expenseFolders.find((item) => item.expense_folder_id === expId)
-      );
+      // console.log(
+      //   expenseFolders.find((item) => item.expense_folder_id === expId)
+      // );
       try {
         await axios.post(
           "http://localhost:8800/api/v1/expenseFolder/" + expId,
@@ -73,10 +66,21 @@ const Dashboard = () => {
       } catch (err) {
         console.log(err);
       }
-      // console.log("test");
-
+      setInputFields((prevFields) => ({
+        ...prevFields,
+        [expId]: !prevFields[expId],
+      }));
       setElementName("edit");
-      // console.log(inputFields);
+    }
+    if (e.target.name === "delete") {
+      try {
+        await axios.delete(
+          "http://localhost:8800/api/v1/expenseFolder/" + expId
+        );
+      } catch (err) {
+        console.log(err);
+      }
+      window.location.reload();
     }
 
     // console.log("After: " + inputFields[expId]);
@@ -193,7 +197,6 @@ const Dashboard = () => {
     setInputFields(initialInputFields);
   }, []);
 
-  // console.log(inputFields);
   return (
     <div className={`main ${isModalOpen ? "modal-open" : ""}`}>
       <NavigationBar
@@ -221,20 +224,23 @@ const Dashboard = () => {
           >
             <div className="card-title-container">
               {inputFields[expenseFolder.expense_folder_id] ? (
-                <input
-                  type="text"
-                  name="name"
-                  value={
-                    expenseFolders.find(
-                      (item) =>
-                        item.expense_folder_id ===
-                        expenseFolder.expense_folder_id
-                    ).name
-                  }
-                  onChange={(e) =>
-                    handleChange(expenseFolder.expense_folder_id, e)
-                  }
-                />
+                <div className="input-box-container">
+                  <input
+                    className="input-box"
+                    type="text"
+                    name="name"
+                    value={
+                      expenseFolders.find(
+                        (item) =>
+                          item.expense_folder_id ===
+                          expenseFolder.expense_folder_id
+                      ).name
+                    }
+                    onChange={(e) =>
+                      handleChange(expenseFolder.expense_folder_id, e)
+                    }
+                  />
+                </div>
               ) : (
                 <h2 className="card-title">{expenseFolder.name}</h2>
               )}

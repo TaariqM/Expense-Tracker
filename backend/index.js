@@ -17,6 +17,7 @@ app.get("/", (request, response) => {
   response.json("Hello, this is the backend");
 });
 
+// Creates and adds a new user account
 app.post("/api/v1/register", (request, response) => {
   const q =
     "INSERT INTO user (`email`, `password`, `first_name`, `last_name`) VALUES (?)";
@@ -37,6 +38,7 @@ app.post("/api/v1/register", (request, response) => {
   });
 });
 
+// Passes user login information, to login an existing user account
 app.post("/api/v1/login", (request, response) => {
   const q = "SELECT * FROM user WHERE `email` = ? AND `password` = ?";
 
@@ -44,15 +46,14 @@ app.post("/api/v1/login", (request, response) => {
     if (err) {
       return response.status(500).json(err);
     } else {
-      // return response.status(200).json("User has been signed in successfully");
       return response.status(200).json(data);
     }
   });
 });
 
+// Update the password for an existing user
 app.post("/api/v1/forgot_password", (request, response) => {
   const q = "UPDATE user SET `password` = ? WHERE `email` = ?";
-  // const values = [request.body.password, request.body.email];
 
   db.query(q, [request.body.password, request.body.email], (err, data) => {
     if (err) {
@@ -63,6 +64,7 @@ app.post("/api/v1/forgot_password", (request, response) => {
   });
 });
 
+// Get a specific user based on the user ID
 app.get("/api/v1/user/:id", (request, response) => {
   const userId = request.params.id;
   const q = "SELECT * FROM user WHERE `user_id` = ?";
@@ -76,6 +78,7 @@ app.get("/api/v1/user/:id", (request, response) => {
   });
 });
 
+// Add an expense folder to the Expense Folder table
 app.post("/api/v1/addExpenseFolder", (request, response) => {
   const q = "INSERT INTO expense_folder (`user_id`, `name`) VALUES (?)";
   const values = [request.body.userId, request.body.folderName];
@@ -89,6 +92,7 @@ app.post("/api/v1/addExpenseFolder", (request, response) => {
   });
 });
 
+// Get expense folder folder based on the user ID
 app.get("/api/v1/expenseFolder/:id", (request, response) => {
   const userId = request.params.id;
   const q = "SELECT * FROM expense_folder WHERE `user_id` = ?";
@@ -102,6 +106,7 @@ app.get("/api/v1/expenseFolder/:id", (request, response) => {
   });
 });
 
+// Get a specific expense folder based on the user ID and expense folder ID
 app.get("/api/v1/expenseFolder/:id/:expId", (request, response) => {
   const userId = request.params.id;
   const expId = request.params.expId;
@@ -117,6 +122,7 @@ app.get("/api/v1/expenseFolder/:id/:expId", (request, response) => {
   });
 });
 
+// Add a new expense to the Expense Table
 app.post("/api/v1/expense", (request, response) => {
   const q =
     "INSERT INTO expense (`user_id`, `expense_folder_id`, `title`, `amount`, `category`, `desc`, `date`) VALUES (?)";
@@ -139,6 +145,7 @@ app.post("/api/v1/expense", (request, response) => {
   });
 });
 
+// Get all expenses based off of the specific user ID and expense folder ID
 app.get("/api/v1/expense/:id/:expId", (request, response) => {
   const q =
     "SELECT * FROM expense WHERE `user_id` = ? AND `expense_folder_id` = ?";
@@ -154,6 +161,7 @@ app.get("/api/v1/expense/:id/:expId", (request, response) => {
   });
 });
 
+// Update an expense based off of the specific user ID and expense folder ID
 app.post("/api/v1/expense/:expenseId", (request, response) => {
   const q =
     "UPDATE expense SET `title` = ?, `amount` = ?, `category` = ?, `desc` = ?, `date` = ? WHERE expense_id = ?";
@@ -180,6 +188,7 @@ app.post("/api/v1/expense/:expenseId", (request, response) => {
   );
 });
 
+// Delete an expense based off of the specific user ID and expense folder ID
 app.delete("/api/v1/expense/:expenseId", (request, response) => {
   const q = "DELETE FROM expense WHERE `expense_id` = ?";
   const expense_Id = request.params.expenseId;
@@ -193,12 +202,27 @@ app.delete("/api/v1/expense/:expenseId", (request, response) => {
   });
 });
 
+// Modify and update the name of an expense folder
 app.post("/api/v1/expenseFolder/:expId", (request, response) => {
   const q =
     "UPDATE expense_folder SET `name` = ? WHERE `expense_folder_id` = ?";
   const expenseFolder_Id = request.params.expId;
 
   db.query(q, [request.body.name, expenseFolder_Id], (err, data) => {
+    if (err) {
+      return response.status(500).json(err);
+    } else {
+      return response.status(200).json(data);
+    }
+  });
+});
+
+// Delete an expense folder based off of the expense folder id
+app.delete("/api/v1/expenseFolder/:expId", (request, response) => {
+  const q = "DELETE FROM expense_folder WHERE `expense_folder_id` = ?";
+  const expenseFolder_Id = request.params.expId;
+
+  db.query(q, [expenseFolder_Id], (err, data) => {
     if (err) {
       return response.status(500).json(err);
     } else {

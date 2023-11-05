@@ -1,14 +1,25 @@
 import express from "express";
 import mysql from "mysql";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "LearnsqEL3",
-  database: "expensedb",
+  host: process.env.REACT_APP_HOST,
+  user: process.env.REACT_APP_USER,
+  password: process.env.REACT_APP_PASSWORD,
+  database: process.env.REACT_APP_DATABASE,
 });
+
+// db.connect((err) => {
+//   if (err) {
+//     console.error("Database connection error:", err);
+//   } else {
+//     console.log("Connected to the database");
+//   }
+// });
 
 app.use(express.json());
 app.use(cors());
@@ -231,6 +242,6 @@ app.delete("/api/v1/expenseFolder/:expId", (request, response) => {
   });
 });
 
-app.listen(8800, () => {
-  console.log("Connected to backend");
+app.listen(process.env.REACT_APP_PORT, () => {
+  console.log("Backend Server is listening");
 });

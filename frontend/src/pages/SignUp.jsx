@@ -19,31 +19,54 @@ const SignUp = () => {
     setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errorMessages = signUpValidation(user);
     setErrors(errorMessages);
-    console.log(errors);
-  };
+    // console.log(errors);
 
-  useEffect(() => {
-    const submitData = async () => {
-      if (!user.firstname || !user.lastname || !user.email || !user.password) {
-        console.log("Form fields are required");
-        console.log(user);
-        return;
-      }
-      if (Object.values(errors).every((error) => error === "")) {
-        console.log("User values before", user);
+    if (!user.firstname || !user.lastname || !user.email || !user.password) {
+      console.log("Form fields are required");
+      console.log(user);
+      return;
+    }
+    if (
+      Object.values(errorMessages).every((errorMessage) => errorMessage === "")
+    ) {
+      // console.log("User values before", user);
+      try {
         await axios.post("http://localhost:8800/api/v1/register", user);
         navigate("/");
-      } else {
-        console.log("Bad sign up attempt");
+      } catch (err) {
+        console.log(err);
       }
-    };
+    } else {
+      console.log("Bad sign up attempt");
+    }
+  };
 
-    submitData();
-  }, [errors, user, navigate]);
+  // useEffect(() => {
+  //   const submitData = async () => {
+  //     if (!user.firstname || !user.lastname || !user.email || !user.password) {
+  //       console.log("Form fields are required");
+  //       console.log(user);
+  //       return;
+  //     }
+  //     if (Object.values(errors).every((error) => error === "")) {
+  //       console.log("User values before", user);
+  //       try {
+  //         await axios.post("", user);
+  //         navigate("/");
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //     } else {
+  //       console.log("Bad sign up attempt");
+  //     }
+  //   };
+
+  //   submitData();
+  // }, [errors, user, navigate]);
 
   return (
     <div className="sign-up">

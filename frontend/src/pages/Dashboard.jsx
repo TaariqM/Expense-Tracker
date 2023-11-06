@@ -88,26 +88,7 @@ const Dashboard = () => {
 
   const handleChange = (folderId, e) => {
     e.preventDefault();
-    // expenseFolders.forEach((expenseFolder) => {
-    //   if (expenseFolder.expense_folder_id === folder.expense_folder_id) {
-    //   }
-    // });
-    // setExpenseFolders((prevFolders) => ({
-    //   ...prevFolders, expenseFolders.find((item) => item.expense_folder_id === folderId)
-    // }))
-
     updateExpenseFolderName(folderId, e.target.value);
-
-    // setExpenseFolder((prevFolder) => ({
-    //   ...prevFolder,
-    //   [folderId]: {
-    //     ...prevFolder[folderId],
-    //     name: e.target.value,
-    //   },
-    // }));
-
-    // setExpenseFolder(folder);
-    // setExpenseFolder((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const updateExpenseFolderName = (folderId, newName) => {
@@ -179,12 +160,6 @@ const Dashboard = () => {
 
     getData();
     getExpenseFolderData();
-    // expenseFolders.forEach((expenseFolder) => {
-    //   setInputFields((prev) => ({
-    //     ...prev,
-    //     [expenseFolder.expense_folder_id]: false,
-    //   }));
-    // });
 
     console.log(expenseFolder);
   }, [userId]);
@@ -215,7 +190,72 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="cards-container">
+      {expenseFolders.length === 0 ? (
+        <div className="no-expenses">
+          <h2>
+            Please click the 'Add Expense Folder' button to create an Expense
+            Folder
+          </h2>
+        </div>
+      ) : (
+        <div className="cards-container">
+          {expenseFolders.map((expenseFolder) => (
+            <div
+              key={expenseFolder.expense_folder_id}
+              className="card"
+              onClick={(e) => handleCardClick(expenseFolder, e)}
+            >
+              <div className="card-title-container">
+                {inputFields[expenseFolder.expense_folder_id] ? (
+                  <div className="input-box-container">
+                    <input
+                      className="input-box"
+                      type="text"
+                      name="name"
+                      value={
+                        expenseFolders.find(
+                          (item) =>
+                            item.expense_folder_id ===
+                            expenseFolder.expense_folder_id
+                        ).name
+                      }
+                      onChange={(e) =>
+                        handleChange(expenseFolder.expense_folder_id, e)
+                      }
+                    />
+                  </div>
+                ) : (
+                  <h2 className="card-title">{expenseFolder.name}</h2>
+                )}
+              </div>
+
+              <div className="buttons-container">
+                <button
+                  className="cardBtn"
+                  name={elementName}
+                  onClick={(e) =>
+                    handleButtonClick(expenseFolder.expense_folder_id, e)
+                  }
+                >
+                  {inputFields[expenseFolder.expense_folder_id]
+                    ? "Update"
+                    : "Edit"}
+                </button>
+                <button
+                  className="cardBtn"
+                  name="delete"
+                  onClick={(e) =>
+                    handleButtonClick(expenseFolder.expense_folder_id, e)
+                  }
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {/* <div className="cards-container">
         {expenseFolders.map((expenseFolder) => (
           <div
             key={expenseFolder.expense_folder_id}
@@ -270,7 +310,7 @@ const Dashboard = () => {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
 
       {isModalOpen && (
         <ExpenseFolderModal

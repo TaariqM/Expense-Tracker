@@ -7,10 +7,10 @@ dotenv.config();
 
 const app = express();
 const db = mysql.createConnection({
-  host: process.env.REACT_APP_HOST,
-  user: process.env.REACT_APP_USER,
-  password: process.env.REACT_APP_PASSWORD,
-  database: process.env.REACT_APP_DATABASE,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
 });
 
 // db.connect((err) => {
@@ -41,8 +41,7 @@ app.post("/api/v1/register", (request, response) => {
 
   db.query(q, [values], (err, data) => {
     if (err) {
-      console.error("Database error: ", err);
-      return response.status(500).json({ error: "Internal Server Error " });
+      return response.status(500).json(err);
     } else {
       return response.status(200).json("User has been registered successfully");
     }
@@ -242,6 +241,6 @@ app.delete("/api/v1/expenseFolder/:expId", (request, response) => {
   });
 });
 
-app.listen(process.env.REACT_APP_PORT, () => {
+app.listen(process.env.PORT || 8800, () => {
   console.log("Backend Server is listening");
 });

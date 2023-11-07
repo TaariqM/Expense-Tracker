@@ -109,7 +109,7 @@ const Dashboard = () => {
     const getData = async () => {
       try {
         const userData = await axios.get(
-          "http://localhost:8800/api/v1/user/" + userId
+          process.env.REACT_APP_APILINK + "/api/v1/user/" + userId
         );
         setUser({ ...userData.data[0] }); // the axios responses are usually in a 'data' property
 
@@ -140,7 +140,7 @@ const Dashboard = () => {
     const getExpenseFolderData = async () => {
       try {
         const expenseFolderData = await axios.get(
-          "http://localhost:8800/api/v1/expenseFolder/" + userId
+          process.env.REACT_APP_APILINK + "/api/v1/expenseFolder/" + userId
         );
 
         setExpenseFolders(expenseFolderData.data);

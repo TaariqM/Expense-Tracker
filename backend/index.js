@@ -6,14 +6,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const urlDB = `mysql://${process.env.MYSQLUSER}:${process.env.MYSQLPASSWORD}@${process.env.MYSQLHOST}:${process.env.MYSQLPORT}/${process.env.MYSQLDATABASE}`;
-const db = mysql.createConnection(urlDB);
-// const db = mysql.createConnection({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASSWORD,
-//   database: process.env.DB_DATABASE,
-// });
+
+const db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+});
 
 // db.connect((err) => {
 //   if (err) {
@@ -33,7 +32,7 @@ app.get("/", (request, response) => {
 // Creates and adds a new user account
 app.post("/api/v1/register", (request, response) => {
   const q =
-    "INSERT INTO usertable (`email`, `password`, `first_name`, `last_name`) VALUES (?)";
+    "INSERT INTO user (`email`, `password`, `first_name`, `last_name`) VALUES (?)";
   const values = [
     request.body.email,
     request.body.password,
@@ -52,7 +51,7 @@ app.post("/api/v1/register", (request, response) => {
 
 // Passes user login information, to login an existing user account
 app.post("/api/v1/login", (request, response) => {
-  const q = "SELECT * FROM usertable WHERE `email` = ? AND `password` = ?";
+  const q = "SELECT * FROM user WHERE `email` = ? AND `password` = ?";
 
   db.query(q, [request.body.email, request.body.password], (err, data) => {
     if (err) {
@@ -65,7 +64,7 @@ app.post("/api/v1/login", (request, response) => {
 
 // Update the password for an existing user
 app.post("/api/v1/forgot_password", (request, response) => {
-  const q = "UPDATE usertable SET `password` = ? WHERE `email` = ?";
+  const q = "UPDATE user SET `password` = ? WHERE `email` = ?";
 
   db.query(q, [request.body.password, request.body.email], (err, data) => {
     if (err) {
@@ -79,7 +78,7 @@ app.post("/api/v1/forgot_password", (request, response) => {
 // Get a specific user based on the user ID
 app.get("/api/v1/user/:id", (request, response) => {
   const userId = request.params.id;
-  const q = "SELECT * FROM usertable WHERE `user_id` = ?";
+  const q = "SELECT * FROM user WHERE `user_id` = ?";
 
   db.query(q, [userId], (err, data) => {
     if (err) {
@@ -92,7 +91,7 @@ app.get("/api/v1/user/:id", (request, response) => {
 
 // Add an expense folder to the Expense Folder table
 app.post("/api/v1/addExpenseFolder", (request, response) => {
-  const q = "INSERT INTO expensefoldertable (`user_id`, `name`) VALUES (?)";
+  const q = "INSERT INTO expense_folder (`user_id`, `name`) VALUES (?)";
   const values = [request.body.userId, request.body.folderName];
 
   db.query(q, [values], (err, data) => {
@@ -107,7 +106,7 @@ app.post("/api/v1/addExpenseFolder", (request, response) => {
 // Get expense folder folder based on the user ID
 app.get("/api/v1/expenseFolder/:id", (request, response) => {
   const userId = request.params.id;
-  const q = "SELECT * FROM expensefoldertable WHERE `user_id` = ?";
+  const q = "SELECT * FROM expense_folder WHERE `user_id` = ?";
 
   db.query(q, [userId], (err, data) => {
     if (err) {
@@ -123,7 +122,7 @@ app.get("/api/v1/expenseFolder/:id/:expId", (request, response) => {
   const userId = request.params.id;
   const expId = request.params.expId;
   const q =
-    "SELECT `name` FROM expensefoldertable WHERE `user_id` = ? AND `expense_folder_id` = ?";
+    "SELECT `name` FROM expense_folder WHERE `user_id` = ? AND `expense_folder_id` = ?";
 
   db.query(q, [userId, expId], (err, data) => {
     if (err) {
@@ -137,7 +136,7 @@ app.get("/api/v1/expenseFolder/:id/:expId", (request, response) => {
 // Add a new expense to the Expense Table
 app.post("/api/v1/expense", (request, response) => {
   const q =
-    "INSERT INTO expensetable (`user_id`, `expense_folder_id`, `title`, `amount`, `category`, `description`, `date`) VALUES (?)";
+    "INSERT INTO expense (`user_id`, `expense_folder_id`, `title`, `amount`, `category`, `desc`, `date`) VALUES (?)";
   const values = [
     request.body.user_Id,
     request.body.expenseFolder_Id,
@@ -160,7 +159,7 @@ app.post("/api/v1/expense", (request, response) => {
 // Get all expenses based off of the specific user ID and expense folder ID
 app.get("/api/v1/expense/:id/:expId", (request, response) => {
   const q =
-    "SELECT * FROM expensetable WHERE `user_id` = ? AND `expense_folder_id` = ?";
+    "SELECT * FROM expense WHERE `user_id` = ? AND `expense_folder_id` = ?";
   const userId = request.params.id;
   const expId = request.params.expId;
 
@@ -176,7 +175,7 @@ app.get("/api/v1/expense/:id/:expId", (request, response) => {
 // Update an expense based off of the specific user ID and expense folder ID
 app.post("/api/v1/expense/:expenseId", (request, response) => {
   const q =
-    "UPDATE expensetable SET `title` = ?, `amount` = ?, `category` = ?, `description` = ?, `date` = ? WHERE expense_id = ?";
+    "UPDATE expense SET `title` = ?, `amount` = ?, `category` = ?, `desc` = ?, `date` = ? WHERE expense_id = ?";
 
   const expense_Id = request.params.expenseId;
 
@@ -202,7 +201,7 @@ app.post("/api/v1/expense/:expenseId", (request, response) => {
 
 // Delete an expense based off of the specific user ID and expense folder ID
 app.delete("/api/v1/expense/:expenseId", (request, response) => {
-  const q = "DELETE FROM expensetable WHERE `expense_id` = ?";
+  const q = "DELETE FROM expense WHERE `expense_id` = ?";
   const expense_Id = request.params.expenseId;
 
   db.query(q, [expense_Id], (err, data) => {
@@ -217,7 +216,7 @@ app.delete("/api/v1/expense/:expenseId", (request, response) => {
 // Modify and update the name of an expense folder
 app.post("/api/v1/expenseFolder/:expId", (request, response) => {
   const q =
-    "UPDATE expensefoldertable SET `name` = ? WHERE `expense_folder_id` = ?";
+    "UPDATE expense_folder SET `name` = ? WHERE `expense_folder_id` = ?";
   const expenseFolder_Id = request.params.expId;
 
   db.query(q, [request.body.name, expenseFolder_Id], (err, data) => {
@@ -231,7 +230,7 @@ app.post("/api/v1/expenseFolder/:expId", (request, response) => {
 
 // Delete an expense folder based off of the expense folder id
 app.delete("/api/v1/expenseFolder/:expId", (request, response) => {
-  const q = "DELETE FROM expensefoldertable WHERE `expense_folder_id` = ?";
+  const q = "DELETE FROM expense_folder WHERE `expense_folder_id` = ?";
   const expenseFolder_Id = request.params.expId;
 
   db.query(q, [expenseFolder_Id], (err, data) => {

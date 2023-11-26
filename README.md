@@ -104,6 +104,7 @@ Below are the current API Endpoints. More endpoints will be added later on.
 | POST | /api/v1/expense/:expenseId | Lets an existing user edit/update an expense. This is based off that expenses specific id |
 | DELETE | /api/v1/expense/:expenseId | Lets an existing user delete an expense. This is based off that expenses specific id |
 | POST | /api/v1/expenseFolder/:expId | Lets an existing user modify and update the name of an expense folder |
+| DELETE | /api/v1/expenseFolder/:expId | Lets an existing user delete an expense folder based off of the expense folder id |
 
 ## Technologies Used 
 
